@@ -2,389 +2,1129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Budget Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Budget Tracker</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+:root {
+    --blue: #3157d5;
+    --blue-light: #edf1ff;
+    --green: #13875b;
+    --purple: #8954c8;
+    --red: #d94343;
+    --background: #f4f6fb;
+    --text: #20283b;
+    --muted: #697386;
+    --white: #ffffff;
+    --border: #e3e7ef;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-      margin: 0;
-      padding: 25px 15px;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    .container {
-      max-width: 750px;
-      margin: auto;
-    }
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
 
-    h1 {
-      color: #123c69;
-      margin-bottom: 5px;
-    }
+header {
+    background: linear-gradient(135deg, #263fa7, #4778ed);
+    color: white;
+    padding: 30px 20px;
+}
 
-    .subtitle {
-      color: #64748b;
-      margin-top: 0;
-    }
+.header-content, main {
+    max-width: 1100px;
+    margin: auto;
+}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin: 18px 0;
-      box-shadow: 0 3px 12px #0000000a;
-    }
+header h1 {
+    margin: 0 0 9px;
+    font-size: 29px;
+}
 
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
+header p {
+    margin: 0;
+    line-height: 1.6;
+}
 
-    .summary .card {
-      margin: 0;
-      padding: 15px 10px;
-      overflow-wrap: anywhere;
-    }
+main {
+    padding: 20px 18px 35px;
+}
 
-    .summary p {
-      color: #64748b;
-      font-size: 13px;
-      margin: 0 0 10px;
-    }
+.section-title {
+    margin: 28px 0 15px;
+    font-size: 21px;
+}
 
-    .summary h2 {
-      font-size: clamp(15px, 3.5vw, 23px);
-      margin: 0;
-    }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin: 14px 0 6px;
-    }
+.card, .panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 19px;
+    box-shadow: 0 3px 14px rgba(30, 45, 80, 0.04);
+    min-width: 0;
+}
 
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 7px;
-      font-size: 15px;
-    }
+.card-label {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 12px;
+}
 
-    input, select {
-      border: 1px solid #cbd5e1;
-      background: white;
-    }
+.card-value {
+    font-size: 24px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
 
-    button {
-      border: none;
-      background: #123c69;
-      color: white;
-      cursor: pointer;
-      margin-top: 15px;
-    }
+.income { color: var(--green); }
+.expense { color: var(--red); }
+.savings { color: var(--purple); }
+.balance { color: var(--blue); }
 
-    button:hover {
-      background: #1d568c;
-    }
+.layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+    align-items: start;
+}
 
-    .budget-row {
-      display: flex;
-      gap: 10px;
-    }
+.panel h3 {
+    margin: 0 0 17px;
+}
 
-    .budget-row input {
-      flex: 1;
-      min-width: 0;
-    }
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 13px 0 7px;
+}
 
-    .budget-row button {
-      width: auto;
-      margin-top: 0;
-    }
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d6dce7;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    color: var(--text);
+}
 
-    .expense {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 13px 0;
-      border-bottom: 1px solid #e2e8f0;
-    }
+input:focus, select:focus {
+    outline: 2px solid #bdcbff;
+    border-color: var(--blue);
+}
 
-    .expense small {
-      display: block;
-      color: #64748b;
-      margin-top: 5px;
-    }
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-    .expense-right {
-      text-align: right;
-      font-weight: bold;
-    }
+button:focus-visible {
+    outline: 3px solid #9bb0ff;
+    outline-offset: 2px;
+}
 
-    .delete-btn {
-      width: auto;
-      padding: 7px 10px;
-      margin-top: 7px;
-      background: #b91c1c;
-      font-size: 12px;
-    }
+.primary-btn {
+    width: 100%;
+    margin-top: 17px;
+    background: var(--blue);
+    color: white;
+}
 
-    .empty {
-      color: #64748b;
-      text-align: center;
-      padding: 15px;
-    }
+.primary-btn:hover { background: #2546ba; }
 
-    #message {
-      margin-top: 10px;
-      font-size: 14px;
-    }
+.savings-btn {
+    width: 100%;
+    margin-top: 17px;
+    background: var(--purple);
+    color: white;
+}
 
-    @media (max-width: 450px) {
-      .summary {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+.danger-btn {
+    background: #fff0f0;
+    color: var(--red);
+}
+
+.small-btn {
+    padding: 7px 10px;
+    font-size: 12px;
+}
+
+.daily-card {
+    background: linear-gradient(135deg, #ffffff, #f4efff);
+    border: 1px solid #e4d7f7;
+    border-radius: 15px;
+    padding: 22px;
+}
+
+.daily-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.daily-target {
+    color: var(--purple);
+    font-size: 30px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.daily-message {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 30px;
+    background: #eee8f7;
+    color: #7042a8;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.progress-track {
+    height: 13px;
+    width: 100%;
+    border-radius: 20px;
+    background: #e9e5f1;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #8954c8, #b68ae8);
+    transition: width 0.3s ease;
+}
+
+.daily-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.mini-stat {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px;
+}
+
+.mini-label {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.mini-value {
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 6px;
+    overflow-wrap: anywhere;
+}
+
+.goal-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 16px 0 10px;
+    font-size: 13px;
+}
+
+.goal-note {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 13px;
+}
+
+.notice {
+    background: var(--blue-light);
+    color: #2944a5;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 14px;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.transaction-list {
+    display: grid;
+}
+
+.transaction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.transaction:last-child {
+    border-bottom: none;
+}
+
+.transaction-name {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.transaction-meta {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.transaction-right {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.transaction-amount {
+    font-weight: bold;
+    margin-bottom: 7px;
+    overflow-wrap: anywhere;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 25px 5px;
+    line-height: 1.7;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+    padding: 25px 10px;
+}
+
+@media (max-width: 800px) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 430px) {
+    header h1 { font-size: 24px; }
+    main { padding: 15px 12px 25px; }
+    .card, .panel { padding: 15px; }
+    .card-value { font-size: 20px; }
+    .daily-stats { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 
 <body>
-  <main class="container">
-    <h1>Student Budget Tracker</h1>
-    <p class="subtitle">
-      Manage your money. Understand your spending.
-    </p>
 
-    <section class="card">
-      <h3>Set Your Budget (KES)</h3>
-      <div class="budget-row">
-        <input
-          type="number"
-          id="budgetInput"
-          min="0"
-          step="0.01"
-          placeholder="e.g. 3000"
+<header>
+    <div class="header-content">
+        <h1>Student Budget Tracker</h1>
+        <p>Spend wisely, save consistently, and build your financial future.</p>
+    </div>
+</header>
+
+<main>
+
+    <h2 class="section-title">My Financial Overview</h2>
+
+    <section class="cards">
+        <div class="card">
+            <div class="card-label">Total Income</div>
+            <div class="card-value income" id="totalIncome">KSh 0.00</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Total Expenses</div>
+            <div class="card-value expense" id="totalExpenses">KSh 0.00</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Total Savings</div>
+            <div class="card-value savings" id="totalSavings">KSh 0.00</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Available Balance</div>
+            <div class="card-value balance" id="availableBalance">KSh 0.00</div>
+        </div>
+    </section>
+
+    <h2 class="section-title">My Daily Savings Challenge</h2>
+
+    <section class="daily-card">
+        <div class="daily-top">
+            <div>
+                <div class="card-label">Today's savings target</div>
+                <div class="daily-target">KSh 100</div>
+                <div class="daily-message" id="dailyMessage">
+                    Every small amount counts. Start where you can.
+                </div>
+            </div>
+
+            <span class="status-pill" id="dailyStatus">Not yet reached</span>
+        </div>
+
+        <div
+            class="progress-track"
+            id="dailyProgressTrack"
+            role="progressbar"
+            aria-label="Today's savings progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
         >
-        <button onclick="setBudget()">Save Budget</button>
-      </div>
+            <div class="progress-bar" id="dailyProgressBar"></div>
+        </div>
+
+        <div class="goal-info">
+            <span>Saved today</span>
+            <strong id="savedToday">KSh 0.00 / KSh 100.00</strong>
+        </div>
+
+        <div class="daily-stats">
+            <div class="mini-stat">
+                <div class="mini-label">This month's savings</div>
+                <div class="mini-value savings" id="monthlySavings">KSh 0.00</div>
+            </div>
+
+            <div class="mini-stat">
+                <div class="mini-label">Days target reached</div>
+                <div class="mini-value" id="daysReached">0 days</div>
+            </div>
+
+            <div class="mini-stat">
+                <div class="mini-label">Current savings streak</div>
+                <div class="mini-value" id="savingsStreak">0 days</div>
+            </div>
+        </div>
+
+        <p class="goal-note">
+            Save KSh 100 each day when you can. That's KSh 700 in a full
+            seven-day week and KSh 3,000 over 30 days if you reach the target
+            every day. Your progress is based on the savings contributions
+            you record, not on money you merely plan to save.
+        </p>
     </section>
 
-    <section class="summary">
-      <div class="card">
-        <p>Total Budget</p>
-        <h2 id="budget">KES 0</h2>
-      </div>
+    <h2 class="section-title">Manage My Money</h2>
 
-      <div class="card">
-        <p>Total Spent</p>
-        <h2 id="spent">KES 0</h2>
-      </div>
+    <section class="layout">
 
-      <div class="card">
-        <p>Balance Left</p>
-        <h2 id="balance">KES 0</h2>
-      </div>
+        <div class="panel">
+            <h3>Add Income or Expense</h3>
+
+            <form id="transactionForm">
+                <label for="transactionType">Transaction type</label>
+                <select id="transactionType" required>
+                    <option value="income">Income — money received</option>
+                    <option value="expense">Expense — money spent</option>
+                </select>
+
+                <label for="transactionTitle">Description</label>
+                <input
+                    id="transactionTitle"
+                    type="text"
+                    maxlength="100"
+                    placeholder="e.g. Pocket money, food, transport"
+                    required
+                >
+
+                <label for="transactionAmount">Amount (KSh)</label>
+                <input
+                    id="transactionAmount"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Enter amount"
+                    required
+                >
+
+                <label for="transactionDate">Date</label>
+                <input id="transactionDate" type="date" required>
+
+                <button class="primary-btn" type="submit">
+                    Add Transaction
+                </button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>My Personal Savings Goal</h3>
+
+            <form id="goalForm">
+                <label for="goalName">What are you saving for?</label>
+                <input
+                    id="goalName"
+                    type="text"
+                    maxlength="100"
+                    placeholder="e.g. Laptop or school fees"
+                    required
+                >
+
+                <label for="goalAmount">Target amount (KSh)</label>
+                <input
+                    id="goalAmount"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="e.g. 5000"
+                    required
+                >
+
+                <button class="primary-btn" type="submit">
+                    Save My Goal
+                </button>
+            </form>
+
+            <div class="goal-info">
+                <span id="goalLabel">No goal set yet</span>
+                <strong id="goalPercentage">0%</strong>
+            </div>
+
+            <div class="progress-track"
+                 id="goalProgressTrack"
+                 role="progressbar"
+                 aria-label="Personal savings goal progress"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+                 aria-valuenow="0">
+                <div class="progress-bar" id="goalProgressBar"></div>
+            </div>
+
+            <p class="goal-note" id="goalDetails">
+                Set a goal to track your progress.
+            </p>
+        </div>
+
     </section>
 
-    <section class="card">
-      <h3>Record an Expense</h3>
+    <h2 class="section-title">Record My Daily Savings</h2>
 
-      <form id="expenseForm">
-        <label for="description">What did you spend on?</label>
-        <input
-          id="description"
-          type="text"
-          placeholder="e.g. Food"
-          maxlength="80"
-          required
-        >
+    <section class="layout">
 
-        <label for="amount">Amount (KES)</label>
-        <input
-          id="amount"
-          type="number"
-          min="0.01"
-          step="0.01"
-          placeholder="e.g. 150"
-          required
-        >
+        <div class="panel">
+            <h3>Put Money Aside</h3>
 
-        <label for="category">Category</label>
-        <select id="category">
-          <option>Food</option>
-          <option>Transport</option>
-          <option>Internet</option>
-          <option>School Supplies</option>
-          <option>Personal Care</option>
-          <option>Other</option>
-        </select>
+            <form id="savingsForm">
+                <label for="savingsDescription">Description</label>
+                <input
+                    id="savingsDescription"
+                    type="text"
+                    maxlength="100"
+                    placeholder="e.g. Daily savings"
+                    value="Daily savings"
+                    required
+                >
 
-        <button type="submit">Add Expense</button>
-        <p id="message" role="status"></p>
-      </form>
+                <label for="savingsAmount">Amount saved (KSh)</label>
+                <input
+                    id="savingsAmount"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="e.g. 100"
+                    required
+                >
+
+                <label for="savingsDate">Date saved</label>
+                <input id="savingsDate" type="date" required>
+
+                <button class="savings-btn" type="submit">
+                    Record Savings
+                </button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>Student Savings Tips</h3>
+
+            <p class="goal-note">
+                <strong>Start small.</strong> Even KSh 20 or KSh 50 is progress
+                when KSh 100 is not possible.
+            </p>
+
+            <p class="goal-note">
+                <strong>Be consistent.</strong> Record savings on the date
+                you actually put the money aside.
+            </p>
+
+            <p class="goal-note">
+                <strong>Protect your essentials.</strong> Food, transport,
+                school needs, and other necessities come first. Do not borrow
+                money just to meet a savings target.
+            </p>
+
+            <div class="notice">
+                Savings are tracked separately from expenses. Recording
+                KSh 100 in savings reduces your available balance by KSh 100
+                and increases your savings by KSh 100.
+            </div>
+        </div>
+
     </section>
 
-    <section class="card">
-      <h3>Expense History</h3>
-      <div id="expenseList"></div>
+    <h2 class="section-title">My Transaction History</h2>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <h3>All Records</h3>
+            <button class="danger-btn small-btn" id="clearHistory" type="button">
+                Clear All Records
+            </button>
+        </div>
+
+        <div id="transactionList" class="transaction-list">
+            <div class="empty-state">
+                No records yet. Add your first transaction or savings contribution.
+            </div>
+        </div>
     </section>
-  </main>
 
-  <script>
-    let budget = Number(localStorage.getItem("studentBudget")) || 0;
+    <footer>
+        Student Budget Tracker<br>
+        Small savings today can make a difference tomorrow.<br>
+        Records are saved in this browser on this device.
+    </footer>
 
-    let expenses = JSON.parse(
-      localStorage.getItem("studentExpenses") || "[]"
-    );
+</main>
 
-    const money = amount =>
-      "KES " + amount.toLocaleString("en-KE", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+<script>
+"use strict";
 
-    function saveData() {
-      localStorage.setItem("studentBudget", budget);
-      localStorage.setItem(
-        "studentExpenses",
-        JSON.stringify(expenses)
-      );
-    }
+const DAILY_TARGET = 100;
+const STORAGE_KEY = "studentBudgetTrackerV2";
 
-    function setBudget() {
-      const input = document.getElementById("budgetInput");
-      const value = Number(input.value);
+function getLocalDate(date = new Date()) {
+    return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0")
+    ].join("-");
+}
 
-      if (input.value.trim() === "" ||
-          !Number.isFinite(value) || value < 0) {
-        alert("Please enter a valid budget.");
-        return;
-      }
+const today = getLocalDate();
 
-      budget = value;
-      saveData();
-      render();
-      input.value = "";
-    }
+document.getElementById("transactionDate").value = today;
+document.getElementById("savingsDate").value = today;
 
-    document.getElementById("expenseForm")
-      .addEventListener("submit", function(event) {
-        event.preventDefault();
+function loadData() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
 
-        const description =
-          document.getElementById("description").value.trim();
-
-        const amountInput =
-          document.getElementById("amount");
-
-        const amount = Number(amountInput.value);
-
-        const category =
-          document.getElementById("category").value;
-
-        if (!description ||
-            amountInput.value.trim() === "" ||
-            !Number.isFinite(amount) ||
-            amount <= 0) {
-          showMessage("Enter a description and a valid amount.");
-          return;
+        if (!saved) {
+            return {
+                transactions: [],
+                goal: { name: "", amount: 0 }
+            };
         }
 
-        expenses.push({
-          id: Date.now() + Math.random(),
-          description,
-          amount,
-          category,
-          date: new Date().toLocaleDateString()
-        });
+        const parsed = JSON.parse(saved);
 
-        saveData();
-        render();
-        this.reset();
+        if (!parsed || !Array.isArray(parsed.transactions)) {
+            throw new Error("Invalid saved data");
+        }
 
-        showMessage("Expense recorded successfully!");
-      });
+        return {
+            transactions: parsed.transactions.filter(item =>
+                item &&
+                ["income", "expense", "saving"].includes(item.type) &&
+                Number.isFinite(Number(item.amount)) &&
+                Number(item.amount) > 0
+            ),
+            goal: {
+                name: typeof parsed.goal?.name === "string"
+                    ? parsed.goal.name
+                    : "",
+                amount: Number.isFinite(Number(parsed.goal?.amount))
+                    ? Math.max(0, Number(parsed.goal.amount))
+                    : 0
+            }
+        };
+    } catch (error) {
+        alert("The saved records could not be read. A fresh tracker will open.");
+        return {
+            transactions: [],
+            goal: { name: "", amount: 0 }
+        };
+    }
+}
 
-    function deleteExpense(id) {
-      expenses = expenses.filter(item => item.id !== id);
-      saveData();
-      render();
+let data = loadData();
+
+function saveData() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        alert("Changes could not be saved. Check your browser storage.");
+        return false;
+    }
+}
+
+function formatMoney(amount) {
+    return "KSh " + Number(amount).toLocaleString("en-KE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[character]);
+}
+
+function getTotals() {
+    let income = 0;
+    let expenses = 0;
+    let savings = 0;
+
+    data.transactions.forEach(transaction => {
+        const amount = Number(transaction.amount);
+
+        if (transaction.type === "income") {
+            income += amount;
+        } else if (transaction.type === "expense") {
+            expenses += amount;
+        } else if (transaction.type === "saving") {
+            savings += amount;
+        }
+    });
+
+    return {
+        income,
+        expenses,
+        savings,
+        balance: income - expenses - savings
+    };
+}
+
+function getSavingsForDate(date) {
+    return data.transactions
+        .filter(transaction =>
+            transaction.type === "saving" &&
+            transaction.date === date
+        )
+        .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+}
+
+function getSavingsForMonth(year, month) {
+    const prefix = year + "-" + String(month + 1).padStart(2, "0");
+
+    return data.transactions
+        .filter(transaction =>
+            transaction.type === "saving" &&
+            transaction.date.startsWith(prefix)
+        )
+        .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+}
+
+function getDaysReached() {
+    const days = new Set();
+
+    data.transactions.forEach(transaction => {
+        if (transaction.type === "saving") {
+            days.add(transaction.date);
+        }
+    });
+
+    let count = 0;
+
+    days.forEach(date => {
+        if (getSavingsForDate(date) >= DAILY_TARGET) {
+            count++;
+        }
+    });
+
+    return count;
+}
+
+function getCurrentStreak() {
+    // A streak is the number of consecutive calendar days whose
+    // recorded savings meet the daily target. If today has not yet
+    // reached the target, yesterday may still be the active streak.
+
+    const now = new Date();
+    let cursor = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (getSavingsForDate(getLocalDate(cursor)) < DAILY_TARGET) {
+        cursor.setDate(cursor.getDate() - 1);
     }
 
-    function showMessage(message) {
-      document.getElementById("message").textContent = message;
+    let streak = 0;
+
+    while (getSavingsForDate(getLocalDate(cursor)) >= DAILY_TARGET) {
+        streak++;
+        cursor.setDate(cursor.getDate() - 1);
     }
 
-    function render() {
-      const totalSpent = expenses.reduce(
-        (total, item) => total + item.amount, 0
-      );
+    return streak;
+}
 
-      document.getElementById("budget").textContent =
-        money(budget);
+function renderDailySavings() {
+    const savedToday = getSavingsForDate(today);
+    const remaining = Math.max(0, DAILY_TARGET - savedToday);
+    const progress = Math.min(100, (savedToday / DAILY_TARGET) * 100);
 
-      document.getElementById("spent").textContent =
-        money(totalSpent);
+    document.getElementById("savedToday").textContent =
+        formatMoney(savedToday) + " / " + formatMoney(DAILY_TARGET);
 
-      document.getElementById("balance").textContent =
-        money(budget - totalSpent);
+    document.getElementById("dailyProgressBar").style.width =
+        progress + "%";
 
-      const list = document.getElementById("expenseList");
+    document.getElementById("dailyProgressTrack").setAttribute(
+        "aria-valuenow",
+        String(Math.round(progress))
+    );
 
-      if (expenses.length === 0) {
-        list.innerHTML =
-          '<p class="empty">No expenses recorded yet.</p>';
+    const status = document.getElementById("dailyStatus");
+    const message = document.getElementById("dailyMessage");
+
+    if (savedToday >= DAILY_TARGET) {
+        status.textContent = "Daily target reached!";
+        status.style.background = "#e2f6ec";
+        status.style.color = "#13875b";
+        message.textContent =
+            "Well done! You've reached today's savings target.";
+    } else if (savedToday > 0) {
+        status.textContent = "Good start";
+        status.style.background = "#eee8f7";
+        status.style.color = "#7042a8";
+        message.textContent =
+            "You're " + formatMoney(remaining) +
+            " away from today's target. Save what you can.";
+    } else {
+        status.textContent = "Not yet reached";
+        status.style.background = "#eee8f7";
+        status.style.color = "#7042a8";
+        message.textContent =
+            "Every small amount counts. Start where you can.";
+    }
+
+    const now = new Date();
+
+    document.getElementById("monthlySavings").textContent =
+        formatMoney(getSavingsForMonth(now.getFullYear(), now.getMonth()));
+
+    document.getElementById("daysReached").textContent =
+        getDaysReached() + (getDaysReached() === 1 ? " day" : " days");
+
+    document.getElementById("savingsStreak").textContent =
+        getCurrentStreak() + (getCurrentStreak() === 1 ? " day" : " days");
+}
+
+function renderGoal() {
+    const summary = getTotals();
+    const goalAmount = Number(data.goal.amount) || 0;
+    const saved = summary.savings;
+
+    document.getElementById("goalLabel").textContent =
+        data.goal.name || "No goal set yet";
+
+    const percentage = goalAmount > 0
+        ? Math.min(100, (saved / goalAmount) * 100)
+        : 0;
+
+    document.getElementById("goalPercentage").textContent =
+        Math.round(percentage) + "%";
+
+    document.getElementById("goalProgressBar").style.width =
+        percentage + "%";
+
+    document.getElementById("goalProgressTrack").setAttribute(
+        "aria-valuenow",
+        String(Math.round(percentage))
+    );
+
+    let details = "Set a personal savings goal to track your progress.";
+
+    if (goalAmount > 0 && saved >= goalAmount) {
+        details = "Congratulations! You have reached your savings goal.";
+    } else if (goalAmount > 0) {
+        details = formatMoney(saved) + " saved. " +
+            formatMoney(goalAmount - saved) + " remaining.";
+    }
+
+    document.getElementById("goalDetails").textContent = details;
+}
+
+function renderTransactions() {
+    const list = document.getElementById("transactionList");
+
+    if (data.transactions.length === 0) {
+        list.innerHTML = `
+            <div class="empty-state">
+                No records yet. Add your first transaction or savings contribution.
+            </div>`;
         return;
-      }
-
-      list.replaceChildren();
-
-      [...expenses].reverse().forEach(item => {
-        const row = document.createElement("div");
-        row.className = "expense";
-
-        const details = document.createElement("div");
-        const title = document.createElement("strong");
-        title.textContent = item.description;
-
-        const meta = document.createElement("small");
-        meta.textContent =
-          `${item.category} • ${item.date}`;
-
-        details.append(title, meta);
-
-        const right = document.createElement("div");
-        right.className = "expense-right";
-
-        const price = document.createElement("div");
-        price.textContent = money(item.amount);
-
-        const remove = document.createElement("button");
-        remove.className = "delete-btn";
-        remove.textContent = "Delete";
-        remove.setAttribute("aria-label",
-          `Delete ${item.description}`);
-
-        remove.addEventListener("click", () => {
-          deleteExpense(item.id);
-        });
-
-        right.append(price, remove);
-        row.append(details, right);
-        list.append(row);
-      });
     }
 
-    render();
-  </script>
+    const sorted = [...data.transactions].sort((a, b) => {
+        const dateOrder = String(b.date).localeCompare(String(a.date));
+
+        if (dateOrder !== 0) return dateOrder;
+
+        return Number(b.createdAt || 0) - Number(a.createdAt || 0);
+    });
+
+    list.innerHTML = sorted.map(transaction => {
+        let label = "Income";
+        let prefix = "+";
+        let color = "#13875b";
+
+        if (transaction.type === "expense") {
+            label = "Expense";
+            prefix = "−";
+            color = "#d94343";
+        } else if (transaction.type === "saving") {
+            label = "Savings";
+            prefix = "−";
+            color = "#8954c8";
+        }
+
+        return `
+            <div class="transaction">
+                <div>
+                    <div class="transaction-name">
+                        ${escapeHTML(transaction.title)}
+                    </div>
+                    <div class="transaction-meta">
+                        ${label} · ${escapeHTML(transaction.date)}
+                    </div>
+                </div>
+
+                <div class="transaction-right">
+                    <div class="transaction-amount" style="color:${color}">
+                        ${prefix}${formatMoney(transaction.amount)}
+                    </div>
+                    <button
+                        class="danger-btn small-btn"
+                        type="button"
+                        data-delete-id="${escapeHTML(transaction.id)}"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>`;
+    }).join("");
+}
+
+function renderDashboard() {
+    const summary = getTotals();
+
+    document.getElementById("totalIncome").textContent =
+        formatMoney(summary.income);
+
+    document.getElementById("totalExpenses").textContent =
+        formatMoney(summary.expenses);
+
+    document.getElementById("totalSavings").textContent =
+        formatMoney(summary.savings);
+
+    const balanceElement = document.getElementById("availableBalance");
+    balanceElement.textContent = formatMoney(summary.balance);
+    balanceElement.style.color =
+        summary.balance < 0 ? "#d94343" : "#3157d5";
+
+    renderDailySavings();
+    renderGoal();
+    renderTransactions();
+}
+
+function addTransaction(type, title, amount, date) {
+    const numericAmount = Number(amount);
+
+    if (!title.trim()) {
+        alert("Please enter a description.");
+        return false;
+    }
+
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+        alert("Please enter an amount greater than zero.");
+        return false;
+    }
+
+    if (!date) {
+        alert("Please choose a date.");
+        return false;
+    }
+
+    if (!["income", "expense", "saving"].includes(type)) {
+        alert("Invalid transaction type.");
+        return false;
+    }
+
+    const transaction = {
+        id: Date.now().toString() + "-" +
+            Math.random().toString(36).slice(2, 8),
+        type,
+        title: title.trim(),
+        amount: Math.round((numericAmount + Number.EPSILON) * 100) / 100,
+        date,
+        createdAt: Date.now()
+    };
+
+    data.transactions.push(transaction);
+
+    if (!saveData()) {
+        data.transactions.pop();
+        return false;
+    }
+
+    renderDashboard();
+    return true;
+}
+
+document.getElementById("transactionForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const type = document.getElementById("transactionType").value;
+    const title = document.getElementById("transactionTitle").value;
+    const amount = document.getElementById("transactionAmount").value;
+    const date = document.getElementById("transactionDate").value;
+
+    if (addTransaction(type, title, amount, date)) {
+        event.target.reset();
+        document.getElementById("transactionDate").value = getLocalDate();
+    }
+});
+
+document.getElementById("savingsForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const title = document.getElementById("savingsDescription").value;
+    const amount = document.getElementById("savingsAmount").value;
+    const date = document.getElementById("savingsDate").value;
+
+    if (addTransaction("saving", title, amount, date)) {
+        event.target.reset();
+        document.getElementById("savingsDescription").value = "Daily savings";
+        document.getElementById("savingsDate").value = getLocalDate();
+    }
+});
+
+document.getElementById("goalForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const name = document.getElementById("goalName").value.trim();
+    const amount = Number(document.getElementById("goalAmount").value);
+
+    if (!name || !Number.isFinite(amount) || amount <= 0) {
+        alert("Enter a goal name and a target amount greater than zero.");
+        return;
+    }
+
+    const previousGoal = { ...data.goal };
+
+    data.goal = {
+        name,
+        amount: Math.round((amount + Number.EPSILON) * 100) / 100
+    };
+
+    if (!saveData()) {
+        data.goal = previousGoal;
+        return;
+    }
+
+    renderDashboard();
+    alert("Your savings goal has been saved!");
+});
+
+document.getElementById("transactionList").addEventListener("click", event => {
+    const button = event.target.closest("[data-delete-id]");
+
+    if (!button) return;
+
+    const id = button.getAttribute("data-delete-id");
+    const transaction = data.transactions.find(item => item.id === id);
+
+    if (!transaction) return;
+
+    if (!confirm("Delete this " + transaction.type + " record: " +
+                 transaction.title + "?")) {
+        return;
+    }
+
+    const previous = data.transactions;
+    data.transactions = data.transactions.filter(item => item.id !== id);
+
+    if (!saveData()) {
+        data.transactions = previous;
+        return;
+    }
+
+    renderDashboard();
+});
+
+document.getElementById("clearHistory").addEventListener("click", () => {
+    if (data.transactions.length === 0) {
+        alert("There are no records to clear.");
+        return;
+    }
+
+    if (!confirm(
+        "Delete ALL income, expense, and savings records? This cannot be undone."
+    )) {
+        return;
+    }
+
+    const previous = data.transactions;
+    data.transactions = [];
+
+    if (!saveData()) {
+        data.transactions = previous;
+        return;
+    }
+
+    renderDashboard();
+});
+
+document.getElementById("goalName").value = data.goal.name;
+document.getElementById("goalAmount").value =
+    data.goal.amount > 0 ? data.goal.amount : "";
+
+renderDashboard();
+</script>
+
 </body>
 </html>
